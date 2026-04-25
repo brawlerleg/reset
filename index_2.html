@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="FitHome — тренируйся дома без оборудования. Программы для любого уровня, сотни упражнений, реальные результаты.">
+<title>FitHome — Тренируйся дома</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== RESET & BASE ===== */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;font-size:16px}
+  body{font-family:'Manrope',sans-serif;background:#0a0a0a;color:#f0ede8;overflow-x:hidden;line-height:1.6}
+  img{display:block;max-width:100%}
+  a{text-decoration:none;color:inherit}
+  ul{list-style:none}
+
+  /* ===== CSS VARIABLES ===== */
+  :root{
+    --accent:#e8ff47;
+    --accent2:#ff6b35;
+    --dark:#0a0a0a;
+    --dark2:#111;
+    --card:#161616;
+    --border:rgba(255,255,255,.08);
+    --text:#f0ede8;
+    --muted:#888;
+    --display:'Bebas Neue',sans-serif;
+    --radius:16px;
+  }
+
+  /* ===== NOISE OVERLAY ===== */
+  body::before{
+    content:'';position:fixed;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity:.025;pointer-events:none;z-index:9999
+  }
+
+  /* ===== NAV ===== */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.2rem 5vw;
+    background:rgba(10,10,10,.85);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+  }
+  .logo{
+    font-family:var(--display);
+    font-size:1.8rem;letter-spacing:2px;
+    color:var(--accent);
+  }
+  .nav-links{display:flex;gap:2rem;align-items:center}
+  .nav-links a{
+    font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);transition:color .2s
+  }
+  .nav-links a:hover{color:var(--text)}
+  .nav-cta{
+    background:var(--accent);color:#0a0a0a;
+    padding:.55rem 1.4rem;border-radius:50px;
+    font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    transition:transform .2s,box-shadow .2s;
+  }
+  .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(232,255,71,.3)}
+
+  /* ===== HERO ===== */
+  #home{
+    min-height:100svh;
+    display:grid;place-items:center;
+    padding:7rem 5vw 4rem;
+    position:relative;overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse 80% 60% at 60% 30%,rgba(232,255,71,.07) 0%,transparent 70%),
+               radial-gradient(ellipse 50% 40% at 80% 80%,rgba(255,107,53,.06) 0%,transparent 60%);
+  }
+  .hero-grid{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(var(--border) 1px,transparent 1px),
+      linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse 70% 70% at center,black 20%,transparent 80%);
+  }
+  .hero-inner{
+    position:relative;z-index:1;
+    max-width:1100px;width:100%;
+    display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+  }
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:.5rem;
+    background:rgba(232,255,71,.1);border:1px solid rgba(232,255,71,.2);
+    color:var(--accent);padding:.35rem .9rem;border-radius:50px;
+    font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    margin-bottom:1.5rem;
+  }
+  .hero-badge span{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .hero-title{
+    font-family:var(--display);
+    font-size:clamp(4rem,9vw,8rem);
+    line-height:.95;letter-spacing:1px;
+    margin-bottom:1.5rem;
+  }
+  .hero-title em{color:var(--accent);font-style:normal}
+  .hero-sub{color:var(--muted);font-size:1.1rem;line-height:1.7;max-width:480px;margin-bottom:2.5rem}
+  .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+  .btn-primary{
+    background:var(--accent);color:#0a0a0a;
+    padding:.9rem 2.2rem;border-radius:50px;
+    font-weight:700;font-size:1rem;letter-spacing:.03em;
+    transition:transform .2s,box-shadow .2s;
+    display:inline-flex;align-items:center;gap:.5rem;
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(232,255,71,.35)}
+  .btn-ghost{
+    border:1px solid var(--border);color:var(--text);
+    padding:.9rem 2rem;border-radius:50px;
+    font-weight:600;font-size:1rem;
+    transition:border-color .2s,background .2s;
+    display:inline-flex;align-items:center;gap:.5rem;
+  }
+  .btn-ghost:hover{border-color:var(--muted);background:rgba(255,255,255,.04)}
+  .hero-stats{
+    display:flex;gap:2rem;margin-top:3rem;
+    padding-top:2rem;border-top:1px solid var(--border);
+  }
+  .stat-num{font-family:var(--display);font-size:2.5rem;color:var(--accent)}
+  .stat-lbl{font-size:.82rem;color:var(--muted);font-weight:500}
+  /* Hero visual */
+  .hero-visual{position:relative}
+  .phone-wrap{
+    position:relative;width:300px;margin:0 auto;
+  }
+  .phone-frame{
+    width:100%;aspect-ratio:.47;
+    background:var(--card);
+    border-radius:40px;
+    border:1px solid rgba(255,255,255,.12);
+    overflow:hidden;
+    box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);
+    position:relative;
+  }
+  .phone-screen{
+    width:100%;height:100%;
+    background:linear-gradient(160deg,#1a1a1a 0%,#0f0f0f 100%);
+    padding:1.5rem 1rem;
+    display:flex;flex-direction:column;gap:1rem;
+  }
+  .phone-header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:.5rem;
+  }
+  .ph-logo{font-family:var(--display);font-size:1.2rem;color:var(--accent)}
+  .ph-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#e8ff47,#ff6b35)}
+  .workout-card{
+    background:rgba(232,255,71,.08);border:1px solid rgba(232,255,71,.15);
+    border-radius:16px;padding:1rem;
+  }
+  .wc-label{font-size:.7rem;color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem}
+  .wc-title{font-family:var(--display);font-size:1.4rem;margin-bottom:.6rem}
+  .wc-meta{display:flex;gap:1rem}
+  .wc-meta span{font-size:.7rem;color:var(--muted);display:flex;align-items:center;gap:.3rem}
+  .ex-list{display:flex;flex-direction:column;gap:.6rem}
+  .ex-item{
+    background:rgba(255,255,255,.04);border-radius:12px;padding:.7rem .9rem;
+    display:flex;align-items:center;gap:.8rem;
+  }
+  .ex-ico{
+    width:34px;height:34px;border-radius:10px;flex-shrink:0;
+    display:grid;place-items:center;font-size:1rem;
+  }
+  .ex-ico.green{background:rgba(232,255,71,.15)}
+  .ex-ico.orange{background:rgba(255,107,53,.15)}
+  .ex-ico.blue{background:rgba(100,180,255,.1)}
+  .ex-name{font-size:.78rem;font-weight:600}
+  .ex-reps{font-size:.68rem;color:var(--muted)}
+  .ex-prog{margin-top:.2rem;height:3px;background:rgba(255,255,255,.08);border-radius:2px}
+  .ex-prog-fill{height:100%;border-radius:2px;background:var(--accent)}
+  .progress-ring{
+    position:absolute;bottom:-20px;right:-20px;
+    width:120px;height:120px;
+    background:var(--card);border-radius:50%;
+    border:1px solid var(--border);
+    display:grid;place-items:center;text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,.4);
+  }
+  .ring-num{font-family:var(--display);font-size:1.8rem;color:var(--accent)}
+  .ring-lbl{font-size:.6rem;color:var(--muted);font-weight:600;text-transform:uppercase}
+  .float-badge{
+    position:absolute;top:60px;left:-30px;
+    background:var(--card);border:1px solid var(--border);
+    border-radius:14px;padding:.7rem 1rem;
+    box-shadow:0 20px 40px rgba(0,0,0,.4);
+    white-space:nowrap;
+  }
+  .fb-title{font-size:.72rem;font-weight:700;margin-bottom:.2rem}
+  .fb-sub{font-size:.65rem;color:var(--muted)}
+  .fb-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#4ade80;margin-right:.4rem}
+
+  /* ===== SECTION SHARED ===== */
+  section{padding:6rem 5vw}
+  .section-tag{
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:1rem;
+  }
+  .section-tag::before{content:'';width:20px;height:2px;background:var(--accent)}
+  .section-title{
+    font-family:var(--display);
+    font-size:clamp(3rem,6vw,5.5rem);
+    line-height:.95;margin-bottom:1.2rem;
+  }
+  .section-sub{color:var(--muted);font-size:1.05rem;max-width:500px;line-height:1.7}
+
+  /* ===== EXERCISES ===== */
+  #exercises{background:var(--dark2)}
+  .ex-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3.5rem;flex-wrap:wrap;gap:1rem}
+  .ex-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:1.5rem;
+  }
+  .ex-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:1.8rem;
+    transition:border-color .25s,transform .25s;
+    cursor:pointer;
+  }
+  .ex-card:hover{border-color:rgba(232,255,71,.3);transform:translateY(-4px)}
+  .ex-card-ico{
+    width:52px;height:52px;border-radius:14px;
+    display:grid;place-items:center;font-size:1.6rem;
+    margin-bottom:1.2rem;
+  }
+  .ex-card-cat{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+  .ex-card-name{font-family:var(--display);font-size:1.6rem;margin-bottom:.5rem}
+  .ex-card-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:1.2rem}
+  .ex-card-tags{display:flex;gap:.5rem;flex-wrap:wrap}
+  .tag{
+    background:rgba(255,255,255,.05);border:1px solid var(--border);
+    border-radius:50px;padding:.2rem .7rem;font-size:.7rem;font-weight:600;color:var(--muted);
+  }
+  .tag.accent{background:rgba(232,255,71,.08);border-color:rgba(232,255,71,.2);color:var(--accent)}
+
+  /* ===== PROGRAMS ===== */
+  #programs{background:var(--dark);position:relative;overflow:hidden}
+  #programs::before{
+    content:'';position:absolute;top:-200px;right:-200px;
+    width:600px;height:600px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,107,53,.06) 0%,transparent 70%);
+  }
+  .prog-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3.5rem;
+  }
+  .prog-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);overflow:hidden;
+    transition:transform .25s,box-shadow .25s;
+  }
+  .prog-card:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(0,0,0,.4)}
+  .prog-card.featured{
+    border-color:rgba(232,255,71,.3);
+    background:linear-gradient(160deg,rgba(232,255,71,.06) 0%,var(--card) 50%);
+  }
+  .prog-visual{
+    height:180px;position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .prog-visual-bg{
+    position:absolute;inset:0;
+  }
+  .prog-emoji{font-size:4rem;position:relative;z-index:1}
+  .prog-featured-badge{
+    position:absolute;top:.8rem;right:.8rem;z-index:2;
+    background:var(--accent);color:#0a0a0a;
+    font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    padding:.25rem .6rem;border-radius:50px;
+  }
+  .prog-body{padding:1.5rem}
+  .prog-level{
+    font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    margin-bottom:.5rem;
+  }
+  .prog-name{font-family:var(--display);font-size:1.7rem;margin-bottom:.5rem}
+  .prog-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:1.2rem}
+  .prog-meta{
+    display:flex;gap:1.2rem;padding-top:1rem;border-top:1px solid var(--border);
+  }
+  .prog-meta-item{font-size:.75rem;color:var(--muted)}
+  .prog-meta-item strong{display:block;color:var(--text);font-weight:700;font-size:.9rem}
+
+  /* ===== REVIEWS ===== */
+  #reviews{background:var(--dark2)}
+  .reviews-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+    margin-top:3.5rem;
+  }
+  .review-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:1.8rem;
+  }
+  .stars{color:var(--accent);font-size:1rem;letter-spacing:2px;margin-bottom:1rem}
+  .review-text{font-size:.92rem;line-height:1.7;color:#ccc;margin-bottom:1.5rem}
+  .review-author{display:flex;align-items:center;gap:.8rem}
+  .author-avatar{
+    width:40px;height:40px;border-radius:50%;
+    display:grid;place-items:center;font-size:1.2rem;flex-shrink:0;
+  }
+  .author-name{font-weight:700;font-size:.9rem}
+  .author-meta{font-size:.75rem;color:var(--muted)}
+  .reviews-summary{
+    display:flex;align-items:center;justify-content:center;gap:3rem;
+    margin-top:3rem;padding:2.5rem;
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  }
+  .summary-item{text-align:center}
+  .summary-num{font-family:var(--display);font-size:3.5rem;color:var(--accent)}
+  .summary-lbl{font-size:.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+
+  /* ===== CTA ===== */
+  #start{
+    background:var(--dark);
+    text-align:center;padding:8rem 5vw;
+    position:relative;overflow:hidden;
+  }
+  #start::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse 60% 50% at center,rgba(232,255,71,.06) 0%,transparent 70%);
+  }
+  .cta-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
+  .cta-title{
+    font-family:var(--display);
+    font-size:clamp(3.5rem,8vw,7rem);
+    line-height:.95;margin-bottom:1.5rem;
+  }
+  .cta-title em{color:var(--accent);font-style:normal}
+  .cta-sub{font-size:1.1rem;color:var(--muted);margin-bottom:3rem;line-height:1.7}
+  .cta-form{
+    display:flex;gap:.8rem;max-width:440px;margin:0 auto;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--border);border-radius:50px;
+    padding:.4rem .4rem .4rem 1.5rem;
+  }
+  .cta-input{
+    flex:1;background:transparent;border:none;outline:none;
+    color:var(--text);font-family:'Manrope',sans-serif;font-size:.95rem;
+  }
+  .cta-input::placeholder{color:var(--muted)}
+  .cta-btn{
+    background:var(--accent);color:#0a0a0a;border:none;cursor:pointer;
+    padding:.75rem 1.6rem;border-radius:50px;
+    font-weight:700;font-size:.9rem;font-family:'Manrope',sans-serif;
+    transition:transform .2s,box-shadow .2s;white-space:nowrap;
+  }
+  .cta-btn:hover{transform:scale(1.05);box-shadow:0 8px 30px rgba(232,255,71,.3)}
+  .cta-note{font-size:.78rem;color:var(--muted);margin-top:1rem}
+
+  /* ===== FOOTER ===== */
+  footer{
+    padding:2rem 5vw;border-top:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+  }
+  .footer-logo{font-family:var(--display);font-size:1.5rem;color:var(--accent);letter-spacing:2px}
+  .footer-copy{font-size:.8rem;color:var(--muted)}
+
+  /* ===== MOBILE NAV HAMBURGER ===== */
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.5rem}
+  .hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+
+  /* ===== SCROLL ANIMATIONS ===== */
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width:900px){
+    .hero-inner{grid-template-columns:1fr}
+    .hero-visual{display:none}
+    .prog-grid{grid-template-columns:1fr}
+    .reviews-grid{grid-template-columns:1fr}
+    .reviews-summary{flex-direction:column;gap:1.5rem}
+    .nav-links{display:none}
+    .hamburger{display:flex}
+  }
+  @media(max-width:600px){
+    .ex-grid{grid-template-columns:1fr}
+    .hero-stats{flex-wrap:wrap;gap:1.2rem}
+    .cta-form{flex-direction:column;border-radius:16px;padding:1rem}
+    .cta-input{padding:.3rem 0}
+    .cta-btn{border-radius:50px}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav role="navigation" aria-label="Главное меню">
+  <div class="logo" aria-label="FitHome">FitHome</div>
+  <div class="nav-links" role="list">
+    <a href="#home" role="listitem">Главная</a>
+    <a href="#exercises" role="listitem">Упражнения</a>
+    <a href="#programs" role="listitem">Программы</a>
+    <a href="#reviews" role="listitem">Отзывы</a>
+    <a href="#start" class="nav-cta" role="listitem">Начать</a>
+  </div>
+  <button class="hamburger" aria-label="Открыть меню" aria-expanded="false" id="burger">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="home" aria-label="Тренируйся дома">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="hero-content reveal">
+      <div class="hero-badge"><span></span>1200+ упражнений доступны</div>
+      <h1 class="hero-title">Тренируйся<br><em>дома.</em><br>Без границ.</h1>
+      <p class="hero-sub">Полноценные тренировки без тренажёрного зала. Программы от новичка до профи — только тело, пространство и желание.</p>
+      <div class="hero-actions">
+        <a href="#start" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 3l6 5-6 5V3z" fill="#0a0a0a"/></svg>
+          Начать бесплатно
+        </a>
+        <a href="#programs" class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.5" stroke="currentColor"/><path d="M6.5 5.5l4 2.5-4 2.5V5.5z" fill="currentColor"/></svg>
+          Посмотреть программы
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num">50K+</div><div class="stat-lbl">Активных пользователей</div></div>
+        <div><div class="stat-num">1.2K</div><div class="stat-lbl">Упражнений</div></div>
+        <div><div class="stat-num">4.9★</div><div class="stat-lbl">Рейтинг в App Store</div></div>
+      </div>
+    </div>
+    <div class="hero-visual reveal" aria-hidden="true" style="transition-delay:.2s">
+      <div class="phone-wrap">
+        <div class="float-badge">
+          <div class="fb-title"><span class="fb-dot"></span>Тренировка идёт</div>
+          <div class="fb-sub">День 12 из 30 · Пресс</div>
+        </div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-header">
+              <div class="ph-logo">FitHome</div>
+              <div class="ph-avatar"></div>
+            </div>
+            <div class="workout-card">
+              <div class="wc-label">Сегодня</div>
+              <div class="wc-title">Пресс & Кор</div>
+              <div class="wc-meta">
+                <span>⏱ 25 мин</span>
+                <span>🔥 240 ккал</span>
+                <span>💪 6 упр</span>
+              </div>
+            </div>
+            <div class="ex-list">
+              <div class="ex-item">
+                <div class="ex-ico green">🏋️</div>
+                <div style="flex:1">
+                  <div class="ex-name">Планка</div>
+                  <div class="ex-reps">3 × 45 сек</div>
+                  <div class="ex-prog"><div class="ex-prog-fill" style="width:80%"></div></div>
+                </div>
+              </div>
+              <div class="ex-item">
+                <div class="ex-ico orange">⚡</div>
+                <div style="flex:1">
+                  <div class="ex-name">Скручивания</div>
+                  <div class="ex-reps">3 × 20 раз</div>
+                  <div class="ex-prog"><div class="ex-prog-fill" style="width:45%"></div></div>
+                </div>
+              </div>
+              <div class="ex-item">
+                <div class="ex-ico blue">🎯</div>
+                <div style="flex:1">
+                  <div class="ex-name">Велосипед</div>
+                  <div class="ex-reps">3 × 30 сек</div>
+                  <div class="ex-prog"><div class="ex-prog-fill" style="width:20%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="progress-ring">
+          <div>
+            <div class="ring-num">68%</div>
+            <div class="ring-lbl">Выполнено</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXERCISES -->
+<section id="exercises">
+  <div class="ex-header reveal">
+    <div>
+      <div class="section-tag">Упражнения</div>
+      <h2 class="section-title">Всё тело.<br>Без железа.</h2>
+      <p class="section-sub">1200+ упражнений с детальными видео-инструкциями, анатомией и техникой выполнения.</p>
+    </div>
+    <a href="#start" class="btn-ghost">Все упражнения →</a>
+  </div>
+  <div class="ex-grid">
+    <article class="ex-card reveal">
+      <div class="ex-card-ico" style="background:rgba(232,255,71,.12)">🤸</div>
+      <div class="ex-card-cat">Кардио</div>
+      <h3 class="ex-card-name">Берпи</h3>
+      <p class="ex-card-desc">Взрывное упражнение на всё тело. Сжигает максимум калорий за минимум времени.</p>
+      <div class="ex-card-tags">
+        <span class="tag accent">Всё тело</span>
+        <span class="tag">Сложное</span>
+        <span class="tag">560 ккал/ч</span>
+      </div>
+    </article>
+    <article class="ex-card reveal" style="transition-delay:.1s">
+      <div class="ex-card-ico" style="background:rgba(255,107,53,.12)">💪</div>
+      <div class="ex-card-cat">Силовые</div>
+      <h3 class="ex-card-name">Отжимания</h3>
+      <p class="ex-card-desc">Базовое упражнение для груди, плеч и трицепса. 10 вариаций для любого уровня.</p>
+      <div class="ex-card-tags">
+        <span class="tag accent">Грудь</span>
+        <span class="tag">Трицепс</span>
+        <span class="tag">Новичок</span>
+      </div>
+    </article>
+    <article class="ex-card reveal" style="transition-delay:.2s">
+      <div class="ex-card-ico" style="background:rgba(100,180,255,.1)">🧘</div>
+      <div class="ex-card-cat">Растяжка</div>
+      <h3 class="ex-card-name">Поза воина</h3>
+      <p class="ex-card-desc">Развивает гибкость, баланс и концентрацию. Идеально для восстановительного дня.</p>
+      <div class="ex-card-tags">
+        <span class="tag accent">Йога</span>
+        <span class="tag">Баланс</span>
+        <span class="tag">Гибкость</span>
+      </div>
+    </article>
+    <article class="ex-card reveal" style="transition-delay:.3s">
+      <div class="ex-card-ico" style="background:rgba(168,85,247,.12)">🏃</div>
+      <div class="ex-card-cat">Ноги</div>
+      <h3 class="ex-card-name">Приседания</h3>
+      <p class="ex-card-desc">Король упражнений на нижнюю часть тела. Укрепляет квадрицепс, ягодицы и кор.</p>
+      <div class="ex-card-tags">
+        <span class="tag accent">Квадрицепс</span>
+        <span class="tag">Ягодицы</span>
+        <span class="tag">Средний</span>
+      </div>
+    </article>
+    <article class="ex-card reveal" style="transition-delay:.1s">
+      <div class="ex-card-ico" style="background:rgba(52,211,153,.1)">🎯</div>
+      <div class="ex-card-cat">Кор</div>
+      <h3 class="ex-card-name">Планка</h3>
+      <p class="ex-card-desc">Статическое упражнение для всего кора. Укрепляет мышцы-стабилизаторы позвоночника.</p>
+      <div class="ex-card-tags">
+        <span class="tag accent">Кор</span>
+        <span class="tag">Спина</span>
+        <span class="tag">Новичок</span>
+      </div>
+    </article>
+    <article class="ex-card reveal" style="transition-delay:.2s">
+      <div class="ex-card-ico" style="background:rgba(251,191,36,.1)">⚡</div>
+      <div class="ex-card-cat">HIIT</div>
+      <h3 class="ex-card-name">Джампинг Джек</h3>
+      <p class="ex-card-desc">Классика кардио тренировок. Разгоняет пульс и сжигает жир уже с первых секунд.</p>
+      <div class="ex-card-tags">
+        <span class="tag accent">Кардио</span>
+        <span class="tag">Жиросжигание</span>
+        <span class="tag">HIIT</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section id="programs">
+  <div class="reveal">
+    <div class="section-tag">Программы</div>
+    <h2 class="section-title">Программа.<br>Результат.</h2>
+    <p class="section-sub">Структурированные планы тренировок с прогрессией нагрузки и встроенным трекингом.</p>
+  </div>
+  <div class="prog-grid">
+    <article class="prog-card reveal">
+      <div class="prog-visual">
+        <div class="prog-visual-bg" style="background:linear-gradient(135deg,#1a2a1a,#0f1f0f)"></div>
+        <div class="prog-emoji">🌱</div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-level" style="color:#4ade80">Начинающий</div>
+        <h3 class="prog-name">Старт с нуля</h3>
+        <p class="prog-desc">Идеально для тех, кто только начинает. Мягкое введение в регулярные тренировки.</p>
+        <div class="prog-meta">
+          <div class="prog-meta-item"><strong>4 недели</strong>Длительность</div>
+          <div class="prog-meta-item"><strong>20 мин</strong>В день</div>
+          <div class="prog-meta-item"><strong>3×/нед</strong>Частота</div>
+        </div>
+      </div>
+    </article>
+    <article class="prog-card featured reveal" style="transition-delay:.1s">
+      <div class="prog-visual">
+        <div class="prog-visual-bg" style="background:linear-gradient(135deg,#2a2010,#1a1508)"></div>
+        <div class="prog-featured-badge">Хит</div>
+        <div class="prog-emoji">🔥</div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-level" style="color:var(--accent)">Средний</div>
+        <h3 class="prog-name">30 дней силы</h3>
+        <p class="prog-desc">Интенсивная программа для набора силы и улучшения тонуса без единой гантели.</p>
+        <div class="prog-meta">
+          <div class="prog-meta-item"><strong>30 дней</strong>Длительность</div>
+          <div class="prog-meta-item"><strong>35 мин</strong>В день</div>
+          <div class="prog-meta-item"><strong>5×/нед</strong>Частота</div>
+        </div>
+      </div>
+    </article>
+    <article class="prog-card reveal" style="transition-delay:.2s">
+      <div class="prog-visual">
+        <div class="prog-visual-bg" style="background:linear-gradient(135deg,#2a0a0a,#1a0505)"></div>
+        <div class="prog-emoji">💎</div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-level" style="color:var(--accent2)">Продвинутый</div>
+        <h3 class="prog-name">Атлет дома</h3>
+        <p class="prog-desc">Для тех, кто хочет выйти на новый уровень. Взрывная сила, выносливость, рельеф.</p>
+        <div class="prog-meta">
+          <div class="prog-meta-item"><strong>8 недель</strong>Длительность</div>
+          <div class="prog-meta-item"><strong>50 мин</strong>В день</div>
+          <div class="prog-meta-item"><strong>6×/нед</strong>Частота</div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reveal">
+    <div class="section-tag">Отзывы</div>
+    <h2 class="section-title">Говорят<br>результаты.</h2>
+    <p class="section-sub">Более 50 000 человек уже изменили свою жизнь с FitHome.</p>
+  </div>
+  <div class="reviews-grid">
+    <article class="review-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">«За 30 дней программы я сбросила 4 кг и наконец почувствовала своё тело. Тренировки никогда не надоедают — каждый день что-то новое.»</p>
+      <div class="review-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#e8ff47,#a8c520)">👩</div>
+        <div>
+          <div class="author-name">Анна К.</div>
+          <div class="author-meta">Москва · Программа «30 дней силы»</div>
+        </div>
+      </div>
+    </article>
+    <article class="review-card reveal" style="transition-delay:.1s">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">«Пробовал многое, но FitHome — первое приложение, с которым я реально занимаюсь 5 раз в неделю. Интерфейс чистый, видео понятные.»</p>
+      <div class="review-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#ff6b35,#e84545)">👨</div>
+        <div>
+          <div class="author-name">Дмитрий В.</div>
+          <div class="author-meta">Санкт-Петербург · Программа «Атлет дома»</div>
+        </div>
+      </div>
+    </article>
+    <article class="review-card reveal" style="transition-delay:.2s">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">«Начала со "Старт с нуля" после декрета. Через 2 месяца перешла на средний уровень. Вот что значит правильная программа!»</p>
+      <div class="review-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">👩</div>
+        <div>
+          <div class="author-name">Мария Л.</div>
+          <div class="author-meta">Казань · Программа «Старт с нуля»</div>
+        </div>
+      </div>
+    </article>
+  </div>
+  <div class="reviews-summary reveal">
+    <div class="summary-item">
+      <div class="summary-num">50K+</div>
+      <div class="summary-lbl">Пользователей</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num">4.9</div>
+      <div class="summary-lbl">Средний рейтинг</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num">98%</div>
+      <div class="summary-lbl">Рекомендуют</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num">2M+</div>
+      <div class="summary-lbl">Тренировок</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="start" aria-label="Начать">
+  <div class="cta-inner reveal">
+    <div class="section-tag" style="justify-content:center">Начать</div>
+    <h2 class="cta-title">Первая<br>тренировка<br><em>сегодня.</em></h2>
+    <p class="cta-sub">Введи свой email и получи 14-дневный бесплатный доступ ко всем программам без привязки карты.</p>
+    <div class="cta-form" role="search">
+      <label for="email-input" class="sr-only">Ваш email</label>
+      <input type="email" id="email-input" class="cta-input" placeholder="your@email.com" autocomplete="email">
+      <button class="cta-btn" type="button" onclick="handleCTA()">Начать бесплатно →</button>
+    </div>
+    <p class="cta-note">Без кредитной карты. Отмена в один клик.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">FitHome</div>
+  <p class="footer-copy">© 2025 FitHome. Все права защищены.</p>
+</footer>
+
+<style>.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}</style>
+
+<script>
+// ===== SCROLL REVEAL =====
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){
+    els.forEach(function(el){el.classList.add('in')});return;
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+    });
+  },{threshold:.12});
+  els.forEach(function(el){io.observe(el)});
+})();
+
+// ===== CTA =====
+function handleCTA(){
+  var inp=document.getElementById('email-input');
+  if(!inp.value||!inp.value.includes('@')){
+    inp.style.outline='2px solid #ff6b35';
+    inp.focus();setTimeout(function(){inp.style.outline=''},2000);
+    return;
+  }
+  alert('🎉 Отлично! Проверь почту — ссылка уже летит к тебе.');
+  inp.value='';
+}
+
+// ===== HAMBURGER =====
+(function(){
+  var btn=document.getElementById('burger');
+  if(!btn)return;
+  btn.addEventListener('click',function(){
+    var exp=btn.getAttribute('aria-expanded')==='true';
+    btn.setAttribute('aria-expanded',String(!exp));
+  });
+})();
+</script>
+</body>
+</html>
